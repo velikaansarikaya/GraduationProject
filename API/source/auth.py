@@ -27,10 +27,10 @@ def register():
     if not validators.email(email):
         return jsonify({'error': "Email is not valid"}), 400
 
-    if current_app.mongo.todoappdb.users.find_one({'email': email}) is not None:
+    if current_app.db.users.find_one({'email': email}) is not None:
         return jsonify({'error': "Email is taken"}), 409
 
-    if current_app.mongo.todoappdb.users.find_one({'username': username}) is not None:
+    if current_app.db.users.find_one({'username': username}) is not None:
         return jsonify({'error': "Username is taken"}), 409
     
     hashed_pwd = generate_password_hash(password)
@@ -39,7 +39,7 @@ def register():
         "username": username,
         "password": hashed_pwd,
         "isadmin": False}
-    current_app.mongo.todoappdb.users.insert_one(user)
+    current_app.db.users.insert_one(user)
 
     return jsonify({
         'message': "User created",

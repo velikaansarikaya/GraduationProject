@@ -19,7 +19,7 @@ def create_app():
     )
     
     app.mongo=MongoClient(app.config['DB_KEY'],tls=True, tlsAllowInvalidCertificates=True)
-
+    app.db=app.mongo.todoappdb
     app.register_blueprint(auth)
     app.register_blueprint(todos)
     return app  
