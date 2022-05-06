@@ -4,27 +4,27 @@ from flask import Blueprint
 todos=Blueprint("todos", __name__, url_prefix='/api/v1/todos')
 
 @todos.route('/add', methods=['POST'])
-def register():
+def add():
     return 'add todo'
 
-@todos.route('/update/<oid>', methods=['POST'])
-def register():
+@todos.route('/update/<oid>', methods=['PUT'])
+def update():
     return 'update selected todo'    
 
 @todos.route('/delete/<oid>', methods=['DELETE'])
-def register():
+def delete():
     return 'delete selected todo'
 
 @todos.route('/delete_completed', methods=['DELETE'])
-def register():
+def delete_completed():
     return 'delete completed todos'
 
 
 @todos.route('/', methods=['GET'])
-def register():
+def get_all():
     return 'get all'
     
 @todos.route('/<oid>', methods=['GET'])
-def register():
+def get():
     return 'get todo'
     
