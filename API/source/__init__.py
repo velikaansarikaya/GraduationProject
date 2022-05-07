@@ -1,6 +1,6 @@
-from distutils.command.config import config
 from flask import Flask
 from datetime import timedelta
+from flask_jwt_extended import JWTManager
 from flask_pymongo import PyMongo
 from source.auth import auth
 from source.todos import todos
@@ -20,6 +20,9 @@ def create_app():
     
     app.mongo=MongoClient(app.config['DB_KEY'],tls=True, tlsAllowInvalidCertificates=True)
     app.db=app.mongo.todoappdb
+
+    JWTManager(app)
+
     app.register_blueprint(auth)
     app.register_blueprint(todos)
     return app  
