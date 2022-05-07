@@ -34,8 +34,12 @@ def update(oid):
     detail = request.json['detail']
     iscompleted = request.json['iscompleted']
 
-    todo = current_app.db.todos.update_one({'_id': ObjectId(oid)}, {'$set': {'header': header, 'detail': detail, 'iscompleted': iscompleted}})
+    try:
+        todo = current_app.db.todos.update_one({'_id': ObjectId(oid)}, {'$set': {'header': header, 'detail': detail, 'iscompleted': iscompleted}})
     
+    except :
+        return jsonify({'error': "Item not found"}), 404 
+
     return jsonify({
             'id': oid,
             'message': str(todo.modified_count) + " object is modified"
@@ -79,6 +83,10 @@ def get_all():
 @jwt_required()
 def get(oid):
     todo = current_app.db.todos.find_one({'_id': ObjectId(oid)})
+
+    if not todo:
+        return jsonify({'error': "Item not found"}), 404
+
     return jsonify({
             '_id': str(todo['_id']),
             'header': todo['header'],
