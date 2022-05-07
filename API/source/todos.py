@@ -25,13 +25,27 @@ def add():
     })
     return jsonify({'message': "Todo is added"}), 200
 
+
 @todos.route('/update/<oid>', methods=['PUT'])
-def update():
-    return 'update selected todo'    
+@jwt_required()
+def update(oid):
+
+    header = request.json['header']
+    detail = request.json['detail']
+    iscompleted = request.json['iscompleted']
+
+    todo = current_app.db.todos.update_one({'_id': ObjectId(oid)}, {'$set': {'header': header, 'detail': detail, 'iscompleted': iscompleted}})
+    
+    return jsonify({
+            'id': oid,
+            'message': str(todo.modified_count) + " object is modified"
+        }), 200
+   
 
 @todos.route('/delete/<oid>', methods=['DELETE'])
 def delete():
     return 'delete selected todo'
+
 
 @todos.route('/delete_completed', methods=['DELETE'])
 def delete_completed():
