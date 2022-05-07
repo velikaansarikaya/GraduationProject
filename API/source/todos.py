@@ -11,12 +11,7 @@ def add():
     user_obj_id = get_jwt_identity()
     header = request.json['header']
     detail = request.json['detail']
-    todo=jsonify({
-        'header': header,
-        'detail': detail,
-        'iscompleted': False,
-        'userid': user_obj_id
-    })
+    
     current_app.db.todos.insert_one({
         'header': header,
         'detail': detail,
@@ -47,13 +42,32 @@ def update(oid):
    
 
 @todos.route('/delete/<oid>', methods=['DELETE'])
-def delete():
-    return 'delete selected todo'
+@jwt_required()
+def delete(oid):
+
+    todo = current_app.db.todos.delete_one({'_id': ObjectId(oid)})
+
+    if todo.deleted_count == 0:
+        return jsonify({'error': "Item not found"}), 404 
+    else:
+        return jsonify({
+            'id': oid,
+            'message': str(todo.deleted_count) + " object is deleted"
+        }), 200
 
 
 @todos.route('/delete_completed', methods=['DELETE'])
+@jwt_required()
 def delete_completed():
-    return 'delete completed todos'
+
+    todo = current_app.db.todos.delete_many({'iscompleted': True})
+
+    if todo.deleted_count == 0:
+        return jsonify({'error': "Item not found"}), 404 
+    else:
+        return jsonify({
+            'message': str(todo.deleted_count) + " object is deleted"
+        }), 200
 
 
 @todos.route('/', methods=['GET'])
