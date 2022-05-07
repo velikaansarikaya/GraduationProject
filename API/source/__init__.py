@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from datetime import timedelta
 from flask_jwt_extended import JWTManager
 from flask_pymongo import PyMongo
@@ -25,4 +25,13 @@ def create_app():
 
     app.register_blueprint(auth)
     app.register_blueprint(todos)
+
+    @app.errorhandler(400)
+    def handle_400(e):
+        return jsonify({'error': "Not found"}), 400
+
+    @app.errorhandler(500)
+    def handle_500(e):
+        return jsonify({'error': "Something went work x("}), 500
+
     return app  
