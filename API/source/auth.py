@@ -1,8 +1,9 @@
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import create_access_token,create_refresh_token
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from flask_jwt_extended import verify_jwt_in_request, get_jwt, JWTManager
+from flask_jwt_extended import verify_jwt_in_request, get_jwt
 from werkzeug.security import check_password_hash, generate_password_hash
+from bson.objectid import ObjectId
 from functools import wraps
 import validators
 
@@ -35,28 +36,63 @@ def register():
     
     hashed_pwd = generate_password_hash(password)
 
-    user = {"email": email,
-        "username": username,
-        "password": hashed_pwd,
-        "isadmin": False}
+    user = {'email': email,
+        'username': username,
+        'password': hashed_pwd,
+        'isadmin': False}
     current_app.db.users.insert_one(user)
 
     return jsonify({
         'message': "User created",
         'user': {
-            'username': username, "email": email
+            'username': username, 'email': email
         }
 
     }), 201    
 
 @auth.route('/login', methods=['POST'])
 def login():
-    return 'user login'    
+    username = request.json['username']
+    password = request.json['password']
+    
+    user = current_app.db.users.find_one({'username': username})
+    
+    if user:
+        is_pass_correct = check_password_hash(user['password'], password)
+
+        if is_pass_correct:
+            user_obj_id = str(user['_id'])
+            refresh = create_refresh_token(identity=user_obj_id)
+            access = create_access_token(identity=user_obj_id)
+
+            return jsonify({
+                'user': {
+                    'refresh': refresh,
+                    'access': access,
+                    'username': user['username'],
+                    'email': user['email']
+                }
+            }), 200    
+
+    return jsonify({'error': 'Wrong credentials'}), 401
 
 @auth.route('/me', methods=['GET'])
+@jwt_required()
 def me():
-    return 'hello its me'
+    user_obj_id = get_jwt_identity()
+    user = current_app.db.users.find_one({'_id': ObjectId(user_obj_id)})
+    return jsonify({
+        'username': user['username'],
+        'email': user['email']
+    }), 200
 
+    
 @auth.route('/token/refresh', methods=['GET'])
+@jwt_required(refresh=True)
 def refresh():
-    return 'token refreshed'
+    user_obj_id = get_jwt_identity()
+    access = create_access_token(identity=user_obj_id)
+
+    return jsonify({
+        'access': access
+    }), 200
