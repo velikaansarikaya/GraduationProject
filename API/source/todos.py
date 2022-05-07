@@ -59,7 +59,7 @@ def get_all():
         
         todo_list.append(new_todo)
     
-    return jsonify({'todo_list':todo_list})
+    return jsonify({'todo_list':todo_list}), 200
 
 @todos.route('/<oid>', methods=['GET'])
 @jwt_required()
@@ -71,5 +71,5 @@ def get(oid):
             'detail': todo['detail'],
             'iscompleted': todo['iscompleted'],
             'userid': todo['userid']
-        })
+        }), 200
     
