@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -38,10 +39,37 @@ def delete_completed():
 
 
 @todos.route('/', methods=['GET'])
+@jwt_required()
 def get_all():
-    return 'get all'
+    user_obj_id = get_jwt_identity()
     
+    todos = current_app.db.todos.find({'userid': user_obj_id})
+    
+    todo_list=[]
+    
+    for todo in todos:
+        
+        new_todo = {
+            '_id': str(todo['_id']),
+            'header': todo['header'],
+            'detail': todo['detail'],
+            'iscompleted': todo['iscompleted'],
+            'userid': todo['userid']
+        }
+        
+        todo_list.append(new_todo)
+    
+    return jsonify({'todo_list':todo_list})
+
 @todos.route('/<oid>', methods=['GET'])
-def get():
-    return 'get todo'
+@jwt_required()
+def get(oid):
+    todo = current_app.db.todos.find_one({'_id': ObjectId(oid)})
+    return jsonify({
+            '_id': str(todo['_id']),
+            'header': todo['header'],
+            'detail': todo['detail'],
+            'iscompleted': todo['iscompleted'],
+            'userid': todo['userid']
+        })
     
