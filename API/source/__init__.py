@@ -5,15 +5,16 @@ from flask_pymongo import PyMongo
 from source.auth import auth
 from source.todos import todos
 from pymongo import MongoClient
+import os
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
     
     app.config.from_mapping(
-        SECRET_KEY = 'b652046ce2de4dd2be393742d0a99225',
-        DB_KEY = 'mongodb+srv://admin:root@cluster0.p1app.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-        JWT_SECRET_KEY = '9babc24a96064baa8a13ca33c20e3268',
+        SECRET_KEY = os.environ.get('SECRET_KEY'),
+        DB_KEY = os.environ.get('DB_KEY'),
+        JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY'),
         JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=15),
         JWT_REFRESH_TOKEN_EXPIRES = timedelta(hours=2)
     )
