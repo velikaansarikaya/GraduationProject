@@ -33,7 +33,7 @@ def update(oid):
         todo = current_app.db.todos.update_one({'_id': ObjectId(oid)}, {'$set': {'header': header, 'detail': detail, 'iscompleted': iscompleted}})
     
     except :
-        return jsonify({'error': "Item not found"}), 404 
+        return jsonify({'message': "Item not found"}), 404 
 
     return jsonify({
             'id': oid,
@@ -48,7 +48,7 @@ def delete(oid):
     todo = current_app.db.todos.delete_one({'_id': ObjectId(oid)})
 
     if todo.deleted_count == 0:
-        return jsonify({'error': "Item not found"}), 404 
+        return jsonify({'message': "Item not found"}), 404 
     else:
         return jsonify({
             'id': oid,
@@ -63,7 +63,7 @@ def delete_completed():
     todo = current_app.db.todos.delete_many({'iscompleted': True})
 
     if todo.deleted_count == 0:
-        return jsonify({'error': "Item not found"}), 404 
+        return jsonify({'message': "Item not found"}), 404 
     else:
         return jsonify({
             'message': str(todo.deleted_count) + " object is deleted"
@@ -99,7 +99,7 @@ def get(oid):
     todo = current_app.db.todos.find_one({'_id': ObjectId(oid)})
 
     if not todo:
-        return jsonify({'error': "Item not found"}), 404
+        return jsonify({'message': "Item not found"}), 404
 
     return jsonify({
             '_id': str(todo['_id']),

@@ -17,22 +17,22 @@ def register():
     email = request.json['email']
 
     if len(password) < 6:
-        return jsonify({'error': "Password is too short"}), 400 
+        return jsonify({'message': "Password is too short"}), 400 
 
     if len(username) < 3:
-        return jsonify({'error': "Username is too short"}), 400
+        return jsonify({'message': "Username is too short"}), 400
 
     if not username.isalnum() or " " in username:
-        return jsonify({'error': "Username should be alphanumeric, also no spaces"}), 400
+        return jsonify({'message': "Username should be alphanumeric, also no spaces"}), 400
 
     if not validators.email(email):
-        return jsonify({'error': "Email is not valid"}), 400
+        return jsonify({'message': "Email is not valid"}), 400
 
     if current_app.db.users.find_one({'email': email}) is not None:
-        return jsonify({'error': "Email is taken"}), 409
+        return jsonify({'message': "Email is taken"}), 409
 
     if current_app.db.users.find_one({'username': username}) is not None:
-        return jsonify({'error': "Username is taken"}), 409
+        return jsonify({'message': "Username is taken"}), 409
     
     hashed_pwd = generate_password_hash(password)
 
@@ -74,7 +74,7 @@ def login():
                 }
             }), 200    
 
-    return jsonify({'error': 'Wrong credentials'}), 401
+    return jsonify({'message': 'Wrong credentials'}), 401
 
 @auth.route('/me', methods=['GET'])
 @jwt_required()
