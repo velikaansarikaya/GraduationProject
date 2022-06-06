@@ -37,7 +37,7 @@ def update(oid):
 
     return jsonify({
             'id': oid,
-            'message': str(todo.modified_count) + " object is modified"
+            'message': str(todo.modified_count) + " todo is modified"
         }), 200
    
 
@@ -52,7 +52,7 @@ def delete(oid):
     else:
         return jsonify({
             'id': oid,
-            'message': str(todo.deleted_count) + " object is deleted"
+            'message': str(todo.deleted_count) + " todo is deleted"
         }), 200
 
 
@@ -63,10 +63,10 @@ def delete_completed():
     todo = current_app.db.todos.delete_many({'iscompleted': True})
 
     if todo.deleted_count == 0:
-        return jsonify({'message': "Item not found"}), 404 
+        return jsonify({'message': "Completed todos are not found"}), 404 
     else:
         return jsonify({
-            'message': str(todo.deleted_count) + " object is deleted"
+            'message': str(todo.deleted_count) + " todos are deleted"
         }), 200
 
 
