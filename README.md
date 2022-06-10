@@ -22,7 +22,7 @@ Operational System: iOS v13.7 <br/>
 IDE: Visual Studio Code v1.68 (May 2022) <br/>
 
 
-Tecnologias / Technologies:
+Technologies:
 - Python 3.10 (Flask)
 - Flutter 3.0.0
 - JSON Web Token
