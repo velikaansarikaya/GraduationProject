@@ -5,18 +5,18 @@
 ## Description
 Graduation work for bachelor degree in Computer Engineering course at Çukurova University.  
 
-Basic todo list application developed for the Android and iOS operating system. Uses the own API that is developed with Flask and running on Heroku. As
+Basic to-do list application developed for the Android and iOS operating systems. Uses the own API that is developed with Flask and running on Heroku. As
 product database uses MongoDB which is running on MongoDB Atlas. The concept of UX is used for the interface, in order to be intuitive
 and easily understandable to any user.
 <br/>
 <br/>
-To use app or modify, it is necessary to have technologies that used in app development on your development environment. You can check them in the 'Technologies Used' section.
+To use the app or modify it, it is necessary to have technologies that are used in app development in your development environment. You can check them in the 'Technologies Used' section.
 <br/>
 <br/>
 
 ## Technologies Used
 
-The following technologies was used to develop this application:
+The following technologies were used to develop this application:
 
 Operational System: iOS v13.7 <br/>
 IDE: Visual Studio Code v1.68 (May 2022) <br/>
